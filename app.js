@@ -3,15 +3,30 @@ const ctx = canvas.getContext("2d");
 const colors = document.getElementsByClassName("jsColor");
 const range = document.getElementById("jsRange");
 const mode = document.getElementById("jsMode");
+const saveBtn = document.getElementById("jsSave");
+
+const INITIAL_COLOR = "#2c2c2c";
 
 //canvas 사이즈 정하기 (pixel modifier)
 canvas.height = 700; // px 쓰지 않음. 
 canvas.width = 700;
 //이걸 정하지 않으면 context 접근 범위를 알 수 없나봄.
 
+// 캔버스 자체의 배경색 미리 지정
+ctx.fillStyle = "white";
+ctx.fillRect(0,0,canvas.width, canvas.height);
+// 이러는 이유는 배경색을 추가하지 않으면 저장시에 배경이
+// 투명해지기 때문.
+
 // ctx의 default 정하기
-ctx.strokeStyle = "#2c2c2c"; // 선에 적용할 색상이나 스타일 = 검정색
+ctx.strokeStyle =  INITIAL_COLOR; // 선에 적용할 색상이나 스타일 = 검정색
 ctx.lineWidth = 2.5; // canvas 내부의 기본 선 굵기 지정 = 2.5
+ctx.fillStyle = INITIAL_COLOR;
+
+// ctx.fillStyle = "blueviolet"; // 이걸로 색상 지정
+// ctx.fillRect(100,100,100,100); 
+// stroke style 적용 못함, x,y, 가로길이, 세로길이
+
 
 let painting = false;
 let filling = false;
@@ -69,6 +84,7 @@ function handleColorclick(event){
     
     //context의 색상 변경이 필요함. 따라서 ctx 변수의 속성을 변경해줌.
     ctx.strokeStyle = color;
+    ctx.fillStyle = color;
 
 
 }
@@ -91,11 +107,45 @@ function handleModeclick(event){
     }
 }
 
+function handleCanvasclick(event){
+    if (filling){
+        ctx.fillRect(0,0,canvas.width, canvas.height);
+    }
+    
+
+}
+
+function handleCM(event){
+    console.log(event);
+    // 이렇게 하면 우클릭을 할 때 마다 콘솔에 로그 찍힘.
+    event.preventDefault();
+    // preventDefalut() 속성을 추가하면 우클릭 방지됨. 
+
+}
+
+function handleSave(event){
+    const image = canvas.toDataURL("image/jpeg");
+    const link = document.createElement('a'); 
+    // image 상수에 만들어진 URL이 a 태그 씌워짐.
+    link.href = image;
+    // 다운로드할 링크로 연결하는 것.
+    link.download = "지환그림판[🌺]"; 
+    // download는 a 태그의 속성. 
+    //연결 대신 다운로드를 하는 것. 
+    //다운로드 대상을 무슨 이름으로 저장할 것인가를 지정함.
+    link.click();
+    // 링크를 클릭해서 다운로드 되도록 가상의 클릭 실행.
+    //console.log(link); 확인용 코드
+
+}
+
 if (canvas){
     canvas.addEventListener("mousemove", onMouseMove);
     canvas.addEventListener("mousedown", startPainting);
     canvas.addEventListener("mouseup", stopPainting);
     canvas.addEventListener("mouseleave", stopPainting);
+    canvas.addEventListener("click", handleCanvasclick);
+    canvas.addEventListener("contextmenu", handleCM);
 }
 
 Array.from(colors).forEach(color => color.addEventListener("click", handleColorclick));
@@ -109,4 +159,10 @@ if (range){
 
 if (mode){
     mode.addEventListener("click", handleModeclick);
+}
+
+//canvas가 이미지를 만들어주므로 다운로드와 저장은 이미 내장된 기능임.
+if (saveBtn){
+    saveBtn.addEventListener('click', handleSave);
+
 }

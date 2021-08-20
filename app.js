@@ -1,11 +1,15 @@
+//const는 절대 변할 수 없는 변수.
 const canvas = document.getElementById("jsCanvas");
 const ctx = canvas.getContext("2d");
 const colors = document.getElementsByClassName("jsColor");
 const range = document.getElementById("jsRange");
 const mode = document.getElementById("jsMode");
 const saveBtn = document.getElementById("jsSave");
+const quiz = document.getElementById("jsQuiz");
+const showBtn = document.getElementById('jsShownHide');
 
 const INITIAL_COLOR = "#2c2c2c";
+const text = new Array('감자', '파인애플', '멋쟁이사자처럼', '여름방학', '과자', '스터디','꿈','구석','확신','감기','신분','살림','상','야구','모자','동화','계곡','아기');
 
 //canvas 사이즈 정하기 (pixel modifier)
 canvas.height = 700; // px 쓰지 않음. 
@@ -27,10 +31,10 @@ ctx.fillStyle = INITIAL_COLOR;
 // ctx.fillRect(100,100,100,100); 
 // stroke style 적용 못함, x,y, 가로길이, 세로길이
 
-
 let painting = false;
 let filling = false;
-
+let startQuiz = true;
+let textShow = true;
 
 function stopPainting(event){
     painting = false;
@@ -111,8 +115,6 @@ function handleCanvasclick(event){
     if (filling){
         ctx.fillRect(0,0,canvas.width, canvas.height);
     }
-    
-
 }
 
 function handleCM(event){
@@ -137,6 +139,33 @@ function handleSave(event){
     // 링크를 클릭해서 다운로드 되도록 가상의 클릭 실행.
     //console.log(link); 확인용 코드
 
+}
+// 여기서부터는 제가 창작한 캐치마인드용 코드입니다.
+
+//랜덤한 문제 출제하기
+function getRandomtext(event){
+    var index = Math.floor(Math.random() * text.length);
+    var quizText = text[index];
+    //alert(quizText);
+    document.getElementById('text_test').innerText = quizText;
+    // 중복제거를 위해 출제한 단어 제거
+    text.splice(index, 1);
+    console.log(text);
+    // 단어가 전부 사라지면?
+}
+
+//출제한 문제 보이기 & 숨기기 - 토글기능 활용
+function ShoworHide(event){
+    if(textShow){
+        document.getElementById('text_test').style.display = 'none';
+        showBtn.innerText = "show";
+        textShow = false;
+    } else {
+        document.getElementById('text_test').style.display = 'block';
+        showBtn.innerText = "hide";
+        textShow = true;
+    }
+    
 }
 
 if (canvas){
@@ -165,4 +194,9 @@ if (mode){
 if (saveBtn){
     saveBtn.addEventListener('click', handleSave);
 
+}
+
+if(startQuiz){
+    quiz.addEventListener("click", getRandomtext);
+    showBtn.addEventListener("click", ShoworHide);
 }

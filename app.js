@@ -7,9 +7,10 @@ const mode = document.getElementById("jsMode");
 const saveBtn = document.getElementById("jsSave");
 const quiz = document.getElementById("jsQuiz");
 const showBtn = document.getElementById('jsShownHide');
+const lines = timer.querySelector('#lines');
 
 const INITIAL_COLOR = "#2c2c2c";
-const text = new Array('감자', '파인애플', '멋쟁이사자처럼', '여름방학', '과자', '스터디','꿈','구석','확신','감기','신분','살림','상','야구','모자','동화','계곡','아기');
+const text = new Array('감자', '파인애플', '멋쟁이사자처럼', '여름방학', '과자', '스터디','꿈','구석','확신','감기','상','배구','모자','동화','계곡','아기');
 
 //canvas 사이즈 정하기 (pixel modifier)
 canvas.height = 700; // px 쓰지 않음. 
@@ -152,6 +153,9 @@ function getRandomtext(event){
     text.splice(index, 1);
     console.log(text);
     // 단어가 전부 사라지면?
+    if  (text.length == 0){
+        alert("게임 끝!");
+    }
 }
 
 //출제한 문제 보이기 & 숨기기 - 토글기능 활용
@@ -167,6 +171,33 @@ function ShoworHide(event){
     }
     
 }
+
+// 타이머 함수
+
+// for(let i = 0; i < 30; i++) {
+//   const line = document.createElement('div');
+//   line.classList.add('line');
+//   line.style.transform = 'rotate(${i*6}deg)';
+
+//   if (i%5 == 0) {
+//     line.classList.add('thick')
+//   }
+//   lines.append(line);
+// }
+
+// const fins = timer.querySelector('#fins');
+// const endTime = 40;
+
+// for (let min=0; min<endTime; min++) {
+//   for (let sec=0; sec<60; sec++) {
+//     const remainFin = document.createElement('div');
+//     remainFin.classList.add('fin');
+//     const deg = min*6+sec*0.1;
+//     remainFin.style.transform = `rotate(${-deg}deg)`
+//     fins.append(remainFin);
+//   }
+// }
+
 
 if (canvas){
     canvas.addEventListener("mousemove", onMouseMove);
